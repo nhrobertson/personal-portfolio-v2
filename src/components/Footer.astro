@@ -1,0 +1,33 @@
+---
+interface Props {
+  section?: string;
+  page?: string;
+}
+const { section = "00", page = "01/01" } = Astro.props;
+const revision = "REV. 2026.08";
+---
+
+<footer class="running-footer">
+  <div class="wrap footer-inner">
+    <span class="mono small-caps">{revision}</span>
+    <span class="mono small-caps">NHROBERTSON.COM &mdash; SEC. {section}</span>
+    <span class="mono small-caps">PG. {page}</span>
+  </div>
+</footer>
+
+<style>
+  .running-footer {
+    border-top: 3px solid var(--ink);
+    margin-top: var(--space-16);
+    padding-block: var(--space-4);
+  }
+
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    color: var(--ink-60);
+  }
+</style>

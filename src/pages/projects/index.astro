@@ -1,0 +1,187 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const entries = (await getCollection("projects")).sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout
+  title="Projects"
+  description="Noah Robertson's personal projects — embedded systems and firmware, browsable as a filesystem."
+  section="03"
+  page="01/01"
+>
+  <section class="wrap chapter">
+    <p class="small-caps chapter-label">Chapter 03 &mdash; Personal projects that I work on in my free time</p>
+    <h1>Projects</h1>
+    <p class="intro mono">
+      ~/projects$ ls -la &mdash; full repository index at{" "}
+      <a href="https://github.com/nhrobertson?tab=repositories" target="_blank" rel="noopener noreferrer">github.com/nhrobertson</a>
+    </p>
+
+    <div class="fs-shell">
+      <nav class="tree" aria-label="Project directory tree">
+        <p class="mono tree-root">~/projects/</p>
+        <ul class="tree-list">
+          {
+            entries.map((entry) => (
+              <li>
+                <details open>
+                  <summary class="mono">{entry.id}/</summary>
+                  <ul class="tree-children mono">
+                    <li><a href={`/projects/${entry.id}/`}>project-page.md</a></li>
+                    <li><a href={entry.data.github} target="_blank" rel="noopener noreferrer">github &#8599;</a></li>
+                  </ul>
+                </details>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <div class="listing">
+        <table class="spec listing-table">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Type</th>
+              <th scope="col">Status</th>
+              <th scope="col">Last Modified</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              entries.map((entry) => (
+                <tr>
+                  <td>
+                    <a href={`/projects/${entry.id}/`}>{entry.data.title}</a>
+                  </td>
+                  <td class="mono">DIR</td>
+                  <td class="mono status-cell">{entry.data.status}</td>
+                  <td class="mono">{entry.data.dateEnd ?? entry.data.dateStart}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .chapter {
+    padding-block: var(--space-12) var(--space-16);
+  }
+
+  .chapter-label {
+    margin-bottom: var(--space-2);
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    margin: 0 0 var(--space-4);
+  }
+
+  .intro {
+    color: var(--ink-60);
+    font-size: 0.875rem;
+    margin-bottom: var(--space-8);
+  }
+
+  .intro a {
+    color: var(--garnet);
+  }
+
+  .fs-shell {
+    display: grid;
+    grid-template-columns: 16rem 1fr;
+    gap: var(--space-8);
+    align-items: start;
+    border: var(--rule);
+  }
+
+  .tree {
+    border-right: var(--rule);
+    padding: var(--space-4);
+    background: var(--ink-12);
+    align-self: stretch;
+  }
+
+  .tree-root {
+    color: var(--ink-60);
+    margin: 0 0 var(--space-2);
+    font-size: 0.8125rem;
+  }
+
+  .tree-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .tree-list summary {
+    cursor: pointer;
+    font-size: 0.875rem;
+    padding-block: var(--space-1);
+  }
+
+  .tree-list summary::marker {
+    color: var(--rust);
+  }
+
+  .tree-children {
+    list-style: none;
+    margin: 0 0 var(--space-2);
+    padding-left: var(--space-4);
+  }
+
+  .tree-children a {
+    display: block;
+    padding-block: var(--space-1);
+    font-size: 0.8125rem;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .tree-children a:hover {
+    color: var(--garnet);
+  }
+
+  .listing {
+    padding: var(--space-4) var(--space-4) var(--space-4) 0;
+  }
+
+  .listing-table {
+    border: 0;
+  }
+
+  .listing-table a {
+    color: var(--garnet);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .listing-table a:hover {
+    text-decoration: underline;
+  }
+
+  .status-cell {
+    color: var(--rust);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+  }
+
+  @media (max-width: 48rem) {
+    .fs-shell {
+      grid-template-columns: 1fr;
+    }
+    .tree {
+      border-right: 0;
+      border-bottom: var(--rule);
+    }
+    .listing {
+      padding: var(--space-4);
+    }
+  }
+</style>

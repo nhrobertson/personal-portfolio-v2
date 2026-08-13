@@ -1,0 +1,353 @@
+---
+import { getCollection, render } from "astro:content";
+import { Image } from "astro:assets";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SpecTable from "../../components/SpecTable.astro";
+import BlockDiagram from "../../components/BlockDiagram.astro";
+
+import espond32 from "../../assets/projects/espond32.jpg";
+import espond32Pcb from "../../assets/projects/espond32-pcb.png";
+import espond32Pond from "../../assets/projects/the-actual-pond-espond32.jpg";
+import desktimer from "../../assets/projects/desk-timer-tracker.jpg";
+import fireplaceImg from "../../assets/projects/fireplace.jpg";
+import pondpiImg from "../../assets/projects/original-pond-pi.jpg";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("projects");
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+const { Content } = await render(entry);
+
+const extras: Record<string, { blocks?: string[]; images: { src: ImageMetadata; alt: string }[] }> = {
+  espond32: {
+    images: [
+      { src: espond32, alt: "ESPond32 control box hardware" },
+      { src: espond32Pcb, alt: "ESPond32 custom PCB" },
+      { src: espond32Pond, alt: "The pond the ESPond32 controls" },
+    ],
+  },
+  pondpi: {
+    blocks: ["Raspberry Pi Pico W 2 (MicroPython)", "SSR Relays", "Pumps · Water Valve"],
+    images: [{ src: pondpiImg, alt: "Original PondPi control box" }],
+  },
+  "desk-timer-tracker": {
+    blocks: ["PIR Sensor", "STM32C0116-DK", "Micro OLED + GPIO Alert"],
+    images: [{ src: desktimer, alt: "Desk Timer Tracker hardware on a desk" }],
+  },
+  fireplace: {
+    blocks: ["Remote Control", "Temp Sensor", "ESP-NOW", "Main Control Unit"],
+    images: [{ src: fireplaceImg, alt: "The fireplace FiReplace is being built to control" }],
+  },
+};
+
+const extra = extras[entry.id];
+
+const repoDisplay = data.github.replace(/^https?:\/\//, "").replace(/\/$/, "");
+
+const ratingRows = [
+  { label: "Status", value: data.status },
+  { label: "Dates", value: data.dateEnd ? `${data.dateStart}–${data.dateEnd}` : data.dateStart },
+  { label: "Stack", value: data.stack.join(", ") },
+  { label: "Repository", value: repoDisplay, href: data.github },
+];
+---
+
+<BaseLayout
+  title={data.title}
+  description={data.summary}
+  section="03"
+  page={`${String(data.order).padStart(2, "0")}/04`}
+>
+  <article class="wrap datasheet">
+    <p class="small-caps chapter-label">
+      <a href="/projects">Projects</a> / {entry.id}/
+    </p>
+    <div class="title-row">
+      <h1>{data.title}</h1>
+      <span class="badge status-badge">{data.status}</span>
+    </div>
+
+    <div class="datasheet-grid">
+      <div class="prose">
+        <p class="summary">{data.summary}</p>
+
+        {
+          entry.id === "espond32" ? (
+            <>
+              <p class="small-caps section-label">Functional Block Diagram</p>
+              <div class="system-diagram-scroll">
+                <div class="system-diagram mono">
+                  <div class="sd-label sd-inputs">3-position switches<br />float sensor</div>
+                  <div class="sd-arrow sd-a1"><span>&#8594;</span></div>
+                  <div class="sd-box sd-esp32">
+                    ESP32-S3 unit
+                    <br />(firmware)
+                  </div>
+                  <div class="sd-arrow sd-a2 sd-arrow-stack">
+                    <span>&#8596;</span>
+                    <small class="small-caps">WiFi LAN</small>
+                    <small class="small-caps">MQTT</small>
+                  </div>
+                  <div class="sd-box sd-broker">
+                    <div>
+                      Mosquitto (MQTT broker)
+                      <br />espond-home-server (dashboard)
+                      <br />&mdash; Raspberry Pi 3
+                    </div>
+                    <div class="sd-browser-annex">
+                      <span>&#8596;</span>
+                      <small class="small-caps">LAN / HTTPS</small> browser
+                    </div>
+                  </div>
+
+                  <div class="sd-arrow sd-gpio">
+                    <span>&#8595;</span>
+                    <small class="small-caps">3V3 GPIO</small>
+                  </div>
+
+                  <div class="sd-box sd-ssr">SSR / relay</div>
+                  <div class="sd-arrow sd-a4">
+                    <span>&#8594;</span>
+                    <small class="small-caps">mains</small>
+                  </div>
+                  <div class="sd-label sd-loads">pumps, valve, light</div>
+                </div>
+              </div>
+            </>
+          ) : (
+            extra?.blocks && (
+              <>
+                <p class="small-caps section-label">Functional Block Diagram</p>
+                <BlockDiagram blocks={extra.blocks} />
+              </>
+            )
+          )
+        }
+
+        <div class="content">
+          <Content />
+        </div>
+
+        {
+          extra?.images && extra.images.length > 0 && (
+            <>
+              <p class="small-caps section-label">Images</p>
+              <div class="gallery">
+                {extra.images.map((img) => (
+                  <Image src={img.src} alt={img.alt} width={600} />
+                ))}
+              </div>
+            </>
+          )
+        }
+
+        <a class="badge" href={data.github} target="_blank" rel="noopener noreferrer">View on GitHub &#8594;</a>
+      </div>
+
+      <aside class="margin-col">
+        <SpecTable title="Absolute Maximum Ratings" rows={ratingRows} />
+      </aside>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .datasheet {
+    padding-block: var(--space-12) var(--space-16);
+  }
+
+  .chapter-label {
+    margin-bottom: var(--space-2);
+  }
+
+  .chapter-label a {
+    color: var(--rust);
+    text-decoration: none;
+  }
+
+  .title-row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-4);
+    margin-bottom: var(--space-8);
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    margin: 0;
+  }
+
+  .status-badge {
+    text-transform: uppercase;
+  }
+
+  .datasheet-grid {
+    display: grid;
+    grid-template-columns: minmax(0, var(--measure)) 18rem;
+    gap: var(--space-12);
+    align-items: start;
+  }
+
+  .summary {
+    font-size: 1.125rem;
+    color: var(--ink-60);
+  }
+
+  .section-label {
+    margin-top: var(--space-8);
+    margin-bottom: var(--space-2);
+  }
+
+  .content :global(p) {
+    margin: 0 0 var(--space-4);
+  }
+
+  .system-diagram-scroll {
+    overflow-x: auto;
+    border: var(--rule);
+    background: var(--ink-12);
+  }
+
+  .system-diagram {
+    display: grid;
+    grid-template-columns: 7.5rem 2.25rem 7.5rem 4rem minmax(10rem, 1fr);
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+      "inputs a1 esp32 a2 broker"
+      ".      .  gpio  .  .     "
+      ".      .  ssr   a4 loads ";
+    gap: var(--space-2) var(--space-1);
+    align-items: center;
+    padding: var(--space-6);
+    width: max-content;
+    min-width: 100%;
+    font-size: 0.75rem;
+  }
+
+  .sd-inputs {
+    grid-area: inputs;
+  }
+  .sd-a1 {
+    grid-area: a1;
+  }
+  .sd-esp32 {
+    grid-area: esp32;
+  }
+  .sd-a2 {
+    grid-area: a2;
+  }
+  .sd-broker {
+    grid-area: broker;
+  }
+  .sd-gpio {
+    grid-area: gpio;
+  }
+  .sd-ssr {
+    grid-area: ssr;
+  }
+  .sd-a4 {
+    grid-area: a4;
+  }
+  .sd-loads {
+    grid-area: loads;
+  }
+
+  .sd-box {
+    border: 1px solid var(--ink);
+    background: var(--paper);
+    padding: var(--space-3);
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .sd-broker {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .sd-browser-annex {
+    border-top: var(--rule-faint);
+    padding-top: var(--space-2);
+    color: var(--rust);
+  }
+
+  .sd-browser-annex small {
+    color: var(--rust);
+  }
+
+  .sd-label {
+    text-align: center;
+    color: var(--ink-60);
+    line-height: 1.3;
+    padding-inline: var(--space-2);
+  }
+
+  .sd-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-1);
+    color: var(--rust);
+    text-align: center;
+  }
+
+  .sd-arrow-stack {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .sd-arrow-stack small {
+    white-space: nowrap;
+    line-height: 1.4;
+  }
+
+  .sd-arrow span {
+    font-size: 1.125rem;
+    line-height: 1;
+  }
+
+  .sd-arrow small {
+    white-space: nowrap;
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+    gap: var(--space-2);
+  }
+
+  .gallery :global(img) {
+    border: var(--rule-faint);
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    width: 100%;
+    height: auto;
+  }
+
+  .margin-col {
+    position: sticky;
+    top: var(--space-8);
+  }
+
+  a.badge {
+    display: inline-block;
+    margin-top: var(--space-8);
+    text-decoration: none;
+  }
+
+  @media (max-width: 56rem) {
+    .datasheet-grid {
+      grid-template-columns: 1fr;
+    }
+    .margin-col {
+      position: static;
+    }
+  }
+</style>

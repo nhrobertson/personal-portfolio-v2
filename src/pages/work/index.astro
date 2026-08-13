@@ -1,0 +1,90 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const entries = (await getCollection("work")).sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout
+  title="Work"
+  description="Noah Robertson's work experience — Digital Custodian, Impact Forensics, and Nsite.ai."
+  section="02"
+  page="01/01"
+>
+  <section class="wrap chapter">
+    <p class="small-caps chapter-label">Chapter 02 &mdash; Work Experience Catalog</p>
+    <h1>Work</h1>
+    <p class="intro">Numbered entries, most recent first in scope, catalogued by employer.</p>
+
+    <table class="spec catalog">
+      <thead>
+        <tr>
+          <th scope="col">No.</th>
+          <th scope="col">Entry</th>
+          <th scope="col">Role</th>
+          <th scope="col">Dates</th>
+          <th scope="col">Stack</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          entries.map((entry) => (
+            <tr>
+              <td class="mono">{String(entry.data.order).padStart(2, "0")}</td>
+              <td>
+                <a href={`/work/${entry.id}/`}>{entry.data.company} &#8594;</a>
+              </td>
+              <td>{entry.data.role}</td>
+              <td class="mono">
+                {entry.data.dateStart}&ndash;{entry.data.dateEnd}
+              </td>
+              <td class="mono stack-cell">{entry.data.stack.join(", ")}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </section>
+</BaseLayout>
+
+<style>
+  .chapter {
+    padding-block: var(--space-12) var(--space-16);
+  }
+
+  .chapter-label {
+    margin-bottom: var(--space-2);
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    margin: 0 0 var(--space-4);
+  }
+
+  .intro {
+    color: var(--ink-60);
+    max-width: var(--measure);
+    margin-bottom: var(--space-8);
+  }
+
+  .catalog {
+    font-size: 0.9375rem;
+  }
+
+  .catalog a {
+    color: var(--garnet);
+    text-decoration: none;
+    font-weight: 600;
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+  }
+
+  .catalog a:hover {
+    text-decoration: underline;
+  }
+
+  .stack-cell {
+    color: var(--rust);
+    font-size: 0.8125rem;
+  }
+</style>

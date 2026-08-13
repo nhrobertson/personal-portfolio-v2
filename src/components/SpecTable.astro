@@ -1,0 +1,83 @@
+---
+interface Row {
+  label: string;
+  value: string;
+  href?: string;
+}
+interface Props {
+  title?: string;
+  rows: Row[];
+}
+const { title, rows } = Astro.props;
+---
+
+<div class="spec-box">
+  {title && <p class="small-caps spec-title">{title}</p>}
+  <table class="spec">
+    <tbody>
+      {
+        rows.map((row) => (
+          <tr>
+            <th scope="row">{row.label}</th>
+            <td>
+              {row.href ? (
+                <a href={row.href} target="_blank" rel="noopener noreferrer">
+                  {row.value}
+                </a>
+              ) : (
+                row.value
+              )}
+            </td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .spec-box {
+    border: var(--rule);
+  }
+
+  .spec-title {
+    padding: var(--space-2) var(--space-3);
+    margin: 0;
+    border-bottom: var(--rule);
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  table.spec {
+    border: 0;
+  }
+
+  table.spec tr:not(:last-child) th,
+  table.spec tr:not(:last-child) td {
+    border-bottom: var(--rule-faint);
+  }
+
+  table.spec th,
+  table.spec td {
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+  }
+
+  table.spec th {
+    background: transparent;
+    color: var(--rust);
+    width: 40%;
+    font-weight: 600;
+  }
+
+  table.spec td a {
+    color: var(--garnet);
+    text-decoration: underline;
+    word-break: break-all;
+  }
+
+  table.spec td a:hover {
+    color: var(--red);
+  }
+</style>

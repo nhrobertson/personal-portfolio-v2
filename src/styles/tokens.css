@@ -1,0 +1,136 @@
+:root {
+  /* palette — 1980s semiconductor databook */
+  --paper: #f7f4ef;
+  --ink: #141210;
+  --garnet: #73121f;
+  --rust: #a85a2a;
+  --red: #c1272d;
+
+  --ink-60: rgba(20, 18, 16, 0.6);
+  --ink-35: rgba(20, 18, 16, 0.35);
+  --ink-12: rgba(20, 18, 16, 0.12);
+  --paper-on-garnet: #f7f4ef;
+
+  /* type */
+  --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  /* spacing scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* structure */
+  --rule: 1px solid var(--ink);
+  --rule-faint: 1px solid var(--ink-12);
+  --content-max: 72rem;
+  --measure: 38rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--paper);
+  color: var(--ink);
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+svg {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: var(--ink);
+}
+
+a:visited {
+  color: var(--ink);
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.text-red {
+  color: var(--red);
+}
+
+.text-garnet {
+  color: var(--garnet);
+}
+
+.text-rust {
+  color: var(--rust);
+}
+
+.small-caps {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  color: var(--rust);
+}
+
+.hairline {
+  border: 0;
+  border-top: var(--rule);
+  margin: 0;
+}
+
+.wrap {
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding-inline: var(--space-6);
+}
+
+table.spec {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+}
+
+table.spec th,
+table.spec td {
+  border: var(--rule-faint);
+  padding: var(--space-2) var(--space-3);
+  overflow-wrap: anywhere;
+  text-align: left;
+  vertical-align: top;
+}
+
+table.spec th {
+  background: var(--ink-12);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.75rem;
+  color: var(--ink);
+}
+
+.badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.15em 0.5em;
+  border: 1px solid var(--red);
+  color: var(--red);
+}

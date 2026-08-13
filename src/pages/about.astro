@@ -1,0 +1,151 @@
+---
+import { Image } from "astro:assets";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SpecTable from "../components/SpecTable.astro";
+import meDadOliver from "../assets/about/me-dad-oliver.jpg";
+import golfSeaTrail from "../assets/about/golf-sea-trail.jpg";
+import oliver from "../assets/about/oliver.jpg";
+
+const specRows = [
+  { label: "Location", value: "Raleigh, NC" },
+  { label: "Undergrad", value: "B.S. Computer Engineering, Univ. of South Carolina — 2020–2024, Cum Laude" },
+  { label: "Graduate", value: "M.S. Computer Engineering, NC State University — in progress, embedded systems focus, exp. Spring 2027" },
+  { label: "Interests", value: "Tennis, golf, Godot game dev, boating on the Inter-Coastal Waterway" },
+  { label: "Pet", value: "Oliver — Corgi" },
+];
+---
+
+<BaseLayout
+  title="About"
+  description="General description of Noah Robertson — background, interests, and Oliver the corgi."
+  section="01"
+  page="01/01"
+>
+  <section class="wrap chapter">
+    <p class="small-caps chapter-label">Chapter 01 &mdash; General Description</p>
+    <h1>About</h1>
+
+    <div class="chapter-grid">
+      <div class="prose">
+        <p>
+          I'm from Raleigh, North Carolina — born and raised. In high school I played
+          tennis, and these days you can find me on the golf course with friends or
+          walking around Dorothea Dix Park. In whatever free time I have, I like to
+          tinker on video games in Godot.
+        </p>
+
+        <figure class="inline-figure">
+          <Image src={golfSeaTrail} alt="Noah golfing with friends on the North Carolina coast" width={800} />
+          <figcaption class="mono small-caps">Golf, NC coast.</figcaption>
+        </figure>
+
+        <p>
+          I have a Corgi named Oliver who is about as friendly as they come. I spend a
+          good chunk of my vacation time on the coast of North Carolina, taking a boat
+          out on the Inter-Coastal Waterway — and one day I plan on building some cool
+          systems to put on that boat.
+        </p>
+
+        <div class="figure-row">
+          <figure class="inline-figure">
+            <Image src={oliver} alt="Oliver the corgi" width={500} />
+            <figcaption class="mono small-caps">Oliver.</figcaption>
+          </figure>
+          <figure class="inline-figure">
+            <Image src={meDadOliver} alt="Noah with his dad and Oliver, out on the boat" width={500} />
+            <figcaption class="mono small-caps">On the ICW.</figcaption>
+          </figure>
+        </div>
+
+        <p>
+          Right now I'm splitting my time between finishing up an M.S. in Computer
+          Engineering at NC State, focused on embedded systems design, and working —
+          more on that on the <a href="/work">Work</a> page.
+        </p>
+      </div>
+
+      <aside class="margin-col">
+        <SpecTable title="Specifications" rows={specRows} />
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .chapter {
+    padding-block: var(--space-12) var(--space-16);
+  }
+
+  .chapter-label {
+    margin-bottom: var(--space-2);
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    margin: 0 0 var(--space-8);
+  }
+
+  .chapter-grid {
+    display: grid;
+    grid-template-columns: minmax(0, var(--measure)) 16rem;
+    gap: var(--space-12);
+    align-items: start;
+  }
+
+  .prose p {
+    margin: 0 0 var(--space-4);
+  }
+
+  .inline-figure {
+    margin: var(--space-8) 0;
+  }
+
+  .inline-figure :global(img) {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 30rem;
+    margin-inline: auto;
+  }
+
+  .inline-figure figcaption {
+    margin-top: var(--space-2);
+  }
+
+  .figure-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+    margin: var(--space-8) 0;
+    align-items: end;
+  }
+
+  .figure-row .inline-figure {
+    margin: 0;
+  }
+
+  .figure-row .inline-figure :global(img) {
+    max-height: 20rem;
+  }
+
+  @media (max-width: 30rem) {
+    .figure-row {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .margin-col {
+    position: sticky;
+    top: var(--space-8);
+  }
+
+  @media (max-width: 56rem) {
+    .chapter-grid {
+      grid-template-columns: 1fr;
+    }
+    .margin-col {
+      position: static;
+    }
+  }
+</style>

@@ -1,0 +1,31 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Out of Print" description="Page not found." section="--" page="--/--">
+  <section class="wrap oop">
+    <p class="small-caps chapter-label">Errata</p>
+    <h1>404 &mdash; Out of Print</h1>
+    <p class="dek">
+      This entry does not appear in the current edition of this databook.
+    </p>
+    <a class="badge" href="/">Return to Table of Contents &#8594;</a>
+  </section>
+</BaseLayout>
+
+<style>
+  .oop {
+    padding-block: var(--space-16);
+  }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin: 0 0 var(--space-4);
+  }
+
+  .dek {
+    color: var(--ink-60);
+    max-width: var(--measure);
+    margin-bottom: var(--space-8);
+  }
+</style>

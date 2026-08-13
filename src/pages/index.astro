@@ -1,0 +1,199 @@
+---
+import { Image } from "astro:assets";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import headshot from "../assets/home/headshot.jpg";
+
+const toc = [
+  {
+    num: "01",
+    href: "/about",
+    title: "General Description",
+    dek: "Basic About Page for information about me.",
+  },
+  {
+    num: "02",
+    href: "/work",
+    title: "Work",
+    dek: "Work Experience Catalog",
+  },
+  {
+    num: "03",
+    href: "/projects",
+    title: "Projects",
+    dek: "Personal projects that I work on in my free time",
+  },
+  {
+    num: "04",
+    href: "/contact",
+    title: "Contact Form",
+    dek: "Get in touch.",
+  },
+];
+---
+
+<BaseLayout
+  title="Home"
+  description="Personal engineering databook of Noah Robertson — embedded systems, software, and projects."
+  section="00"
+  page="01/01"
+>
+  <section class="cover">
+    <div class="wrap cover-inner">
+      <div class="cover-text">
+        <p class="small-caps">Vol. I &mdash; No. 2026</p>
+        <h1>Noah Robertson</h1>
+        <p class="abstract">
+          Computer engineer working across embedded firmware and hardware — currently
+          pursuing an M.S. in Computer Engineering at NC State, focused on embedded
+          systems design.
+        </p>
+        <a class="badge" href="/about">Abstract &amp; Full Description &#8594;</a>
+      </div>
+      <Image src={headshot} alt="Noah Robertson" width={480} class="cover-photo" />
+    </div>
+  </section>
+
+  <hr class="hairline wrap" />
+
+  <section class="toc wrap">
+    <p class="small-caps toc-label">Table of Contents</p>
+    <ol class="toc-list">
+      {
+        toc.map((item) => (
+          <li>
+            <a href={item.href} class="toc-row">
+              <span class="mono toc-num">{item.num}</span>
+              <span class="toc-title">{item.title}</span>
+              <span class="toc-dek">{item.dek}</span>
+              <span class="mono toc-arrow">&#8594;</span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+</BaseLayout>
+
+<style>
+  .cover-inner {
+    padding-block: var(--space-16) var(--space-12);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-12);
+  }
+
+  .cover-text {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .cover-photo {
+    flex: 0 0 auto;
+    width: 15rem;
+    height: 15rem;
+    object-fit: cover;
+    border: 3px solid var(--ink);
+  }
+
+  .cover h1 {
+    font-size: clamp(3rem, 8vw, 5.5rem);
+    line-height: 0.95;
+    margin: var(--space-2) 0 var(--space-6);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .abstract {
+    max-width: var(--measure);
+    font-size: 1.125rem;
+    color: var(--ink-60);
+    margin-bottom: var(--space-6);
+  }
+
+  .toc {
+    padding-block: var(--space-12);
+  }
+
+  .toc-label {
+    margin-bottom: var(--space-4);
+  }
+
+  .toc-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .toc-row {
+    display: grid;
+    grid-template-columns: 3rem 14rem 1fr 2rem;
+    align-items: baseline;
+    gap: var(--space-4);
+    padding-block: var(--space-4);
+    border-top: var(--rule-faint);
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .toc-list li:last-child .toc-row {
+    border-bottom: var(--rule-faint);
+  }
+
+  .toc-num {
+    color: var(--rust);
+    font-size: 0.9375rem;
+  }
+
+  .toc-title {
+    font-size: 1.375rem;
+    font-weight: 600;
+  }
+
+  .toc-dek {
+    color: var(--ink-60);
+    font-size: 0.9375rem;
+  }
+
+  .toc-arrow {
+    color: var(--red);
+    justify-self: end;
+  }
+
+  .toc-row:hover .toc-title {
+    color: var(--garnet);
+  }
+
+  @media (max-width: 40rem) {
+    .toc-row {
+      grid-template-columns: 2.5rem 1fr;
+      grid-template-areas:
+        "num title"
+        ". dek"
+        ". arrow";
+    }
+    .toc-num {
+      grid-area: num;
+    }
+    .toc-title {
+      grid-area: title;
+    }
+    .toc-dek {
+      grid-area: dek;
+    }
+    .toc-arrow {
+      grid-area: arrow;
+    }
+  }
+
+  @media (max-width: 48rem) {
+    .cover-inner {
+      flex-direction: column-reverse;
+      align-items: flex-start;
+    }
+    .cover-photo {
+      width: 8rem;
+      height: 8rem;
+    }
+  }
+</style>
