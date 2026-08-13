@@ -1,6 +1,8 @@
 # build output
 dist/
 .astro/
+.firebase/
+firebase-debug.log
 
 # dependencies
 node_modules/

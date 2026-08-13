@@ -1,7 +1,14 @@
 ---
 import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import headshot from "../assets/home/headshot.jpg";
+
+// To change what's pinned on the home page, set `pinned: true` in the
+// frontmatter of the desired file in src/content/projects/ (and remove it
+// from whichever one currently has it — only the first match is shown).
+const projects = await getCollection("projects");
+const pinned = projects.find((p) => p.data.pinned);
 
 const toc = [
   {
@@ -52,6 +59,26 @@ const toc = [
       <Image src={headshot} alt="Noah Robertson" width={480} class="cover-photo" />
     </div>
   </section>
+
+  {
+    pinned && (
+      <section class="pinned wrap">
+        <a href={`/projects/${pinned.id}/`} class="pinned-card">
+          <span class="mono small-caps pinned-label">
+            <svg class="pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 10c0 6.5-9 12-9 12s-9-5.5-9-12a9 9 0 0 1 18 0z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+            Pinned
+          </span>
+          <span class="pinned-title">{pinned.data.title}</span>
+          <span class="pinned-summary">{pinned.data.summary}</span>
+          <span class="badge pinned-status">{pinned.data.status}</span>
+          <span class="mono pinned-arrow">&#8594;</span>
+        </a>
+      </section>
+    )
+  }
 
   <hr class="hairline wrap" />
 
@@ -109,6 +136,90 @@ const toc = [
     font-size: 1.125rem;
     color: var(--ink-60);
     margin-bottom: var(--space-6);
+  }
+
+  .pinned {
+    padding-bottom: var(--space-8);
+  }
+
+  .pinned-card {
+    display: grid;
+    grid-template-columns: auto auto 1fr auto auto;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    border: var(--rule-faint);
+    border-left: 3px solid var(--rust);
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .pinned-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    color: var(--rust);
+    white-space: nowrap;
+  }
+
+  .pin-icon {
+    width: 0.9em;
+    height: 0.9em;
+    flex: 0 0 auto;
+  }
+
+  .pinned-title {
+    font-weight: 600;
+    font-size: 1.0625rem;
+    white-space: nowrap;
+  }
+
+  .pinned-summary {
+    color: var(--ink-60);
+    font-size: 0.9375rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .pinned-status {
+    text-transform: uppercase;
+  }
+
+  .pinned-arrow {
+    color: var(--red);
+  }
+
+  .pinned-card:hover .pinned-title {
+    color: var(--garnet);
+  }
+
+  @media (max-width: 40rem) {
+    .pinned-card {
+      grid-template-columns: 1fr auto;
+      grid-template-areas:
+        "label label"
+        "title status"
+        "summary summary";
+      row-gap: var(--space-2);
+    }
+    .pinned-label {
+      grid-area: label;
+    }
+    .pinned-title {
+      grid-area: title;
+    }
+    .pinned-status {
+      grid-area: status;
+      justify-self: end;
+    }
+    .pinned-summary {
+      grid-area: summary;
+      white-space: normal;
+    }
+    .pinned-arrow {
+      display: none;
+    }
   }
 
   .toc {

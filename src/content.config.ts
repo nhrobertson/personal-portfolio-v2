@@ -27,6 +27,7 @@ const projects = defineCollection({
     summary: z.string(),
     github: z.string().url(),
     order: z.number(),
+    pinned: z.boolean().default(false),
   }),
 });
 

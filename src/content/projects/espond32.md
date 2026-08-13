@@ -6,6 +6,7 @@ stack: ["ESP32", "FreeRTOS", "MQTT", "Mosquitto"]
 summary: "The spiritual successor of the PondPi — an end-to-end control system IoT device operating 2 pumps, 1 water valve, and 1 light system."
 github: "https://github.com/nhrobertson/ESPond32/"
 order: 2
+pinned: true
 ---
 
 The firmware was developed by hand utilizing FreeRTOS's scheduling and queueing abilities. It uses MQTT to connect to a Mosquitto server hosted on a Raspberry Pi 3 which also hosts a "home-server." Operation is much more stable and efficient than the PondPi.
