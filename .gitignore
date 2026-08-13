@@ -11,6 +11,7 @@ npm-debug.log*
 # environment vars
 .env
 .env.production
+.secret.local
 
 # macOS
 .DS_Store
